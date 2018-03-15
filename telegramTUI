@@ -1,0 +1,5 @@
+#!/usr/bin/python3
+from src.ui import App
+
+TelegeramTUI = App()
+TelegeramTUI.run()
