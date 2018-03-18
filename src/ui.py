@@ -1,9 +1,12 @@
 import npyscreen
-from src.telegramApi import client
 import textwrap
 import curses
 import configparser
+import os.path
 from datetime import timedelta
+from PIL import Image
+from src.telegramApi import client
+from src import aalib
 
 
 class ChatBox(npyscreen.BoxTitle):
@@ -26,8 +29,7 @@ class InputBox(npyscreen.BoxTitle):
     _contained_widget = npyscreen.MultiLineEdit
 
 
-class MyForm(npyscreen.FormBaseNew):
-    x, y = 0, 0
+class MainForm(npyscreen.FormBaseNew):
 
     def create(self):
         # Events
@@ -40,6 +42,7 @@ class MyForm(npyscreen.FormBaseNew):
         config.read('config.ini')
 
         self.emoji = True if config.get('other', 'emoji') == "True" else False
+        self.aalib = True if config.get('other', 'aalib') == "True" else False
         self.timezone = int(config.get('other', 'timezone'))
         self.app_name = config.get('app', 'name')
 
@@ -60,6 +63,10 @@ class MyForm(npyscreen.FormBaseNew):
 
         self.inputBoxObj = self.add(InputBox, name="Input", relx=(x // 5) + 1, rely=-7)
 
+        # init buffer
+        self.buff_messages = len(client.dialogs) * [None]
+
+        # inti handlers
         new_handlers = {
             # exit
             "^Q": self.exit_func,
@@ -71,6 +78,7 @@ class MyForm(npyscreen.FormBaseNew):
         }
         self.add_handlers(new_handlers)
 
+        # fill first data
         self.update_messages()
         self.update_chat()
 
@@ -151,6 +159,13 @@ class MyForm(npyscreen.FormBaseNew):
     def get_messages_info(self):
         current_user = self.chatBoxObj.value
         messages = client.get_messages(current_user)
+
+        # check buffer
+        buff = self.buff_messages[current_user]
+        if buff is not None and messages is not None and \
+                len(buff) != 0 and len(messages) != 0 and \
+                buff[0].id == messages[0].id:
+            return buff
 
         # structure for the dictionary
         class user_info:
@@ -236,7 +251,6 @@ class MyForm(npyscreen.FormBaseNew):
 
             if dialog_type == 1 or dialog_type == 2:
                 offset = " " * (max_name_len - (len(users[messages[i].sender.id].name)))
-
                 name = read + users[messages[i].sender.id].name + ":" + offset
                 color = (len(read) + len(users[messages[i].sender.id].name)) * [users[messages[i].sender.id].color]
 
@@ -248,10 +262,32 @@ class MyForm(npyscreen.FormBaseNew):
                 name = ""
                 color = [0]
 
+            media = messages[i].media if hasattr(messages[i], 'media') else None
             mess = messages[i].message if hasattr(messages[i], 'message') \
                                           and isinstance(messages[i].message, str) else None
 
-            if mess is not None:
+            if self.aalib and media is not None:
+                # if file is not exist
+                if hasattr(media, 'photo'):
+                    if not os.path.isfile(os.getcwd() + "/downloads/" + str(media.photo.id) + ".jpg"):
+                        # download picture
+                        client.download_media(media, "downloads/" + str(media.photo.id))
+
+                    max_width = int((self.x - (self.x // 5) - len(name) - 11) / 1.3)
+                    max_height = int((self.y - 12) / 1.3)
+
+                    screen = aalib.AsciiScreen(width=max_width, height=max_height)
+                    image = Image.open(os.getcwd() + "/downloads/" + str(media.photo.id) + ".jpg").convert('L').resize(
+                        screen.virtual_size)
+                    screen.put_image((0, 0), image)
+                    image_text = screen.render()
+
+                    image_text = image_text.split("\n")
+                    for k in range(len(image_text) - 1, 0, -1):
+                        out.append(Messages(len(name) * " ", date, color, image_text[k], mess_id, read))
+                    out.append(Messages(name, date, color, image_text[0], mess_id, read))
+
+            if mess is not None and mess != "":
                 if mess.find("\n") == -1:
                     if len(mess) + len(name) + len(read) > self.x - (self.x // 5) - 10:
                         max_char = self.x - (self.x // 5) - len(name) - 10
@@ -286,6 +322,7 @@ class MyForm(npyscreen.FormBaseNew):
                     else:
                         out.append(Messages(name, date, color, mess[0], mess_id, read))
 
+        self.buff_messages[current_user] = out
         return out
 
     # events
@@ -346,7 +383,14 @@ class MyForm(npyscreen.FormBaseNew):
             client.need_update_read_messages = 0
 
 
+class ContactsForm(npyscreen.FormBaseNew):
+
+    def create(self):
+        pass
+
+
 class App(npyscreen.StandardApp):
 
     def onStart(self):
-        self.addForm("MAIN", MyForm)
+        self.addForm("MAIN", MainForm)
+        self.addForm("CONTACTS", ContactsForm)

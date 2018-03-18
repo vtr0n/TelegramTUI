@@ -120,6 +120,9 @@ class TelegramApi:
         else:
             return self.messages[user_id]
 
+    def download_media(self, media, path):
+        return self.client.download_media(media, path)
+
     def message_send(self, message, user_id):
         data = self.client.send_message(self.dialogs[user_id].entity, message)
 
