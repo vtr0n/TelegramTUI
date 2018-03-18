@@ -1,4 +1,4 @@
-import npyscreen
+
 import textwrap
 import curses
 import configparser
@@ -7,7 +7,7 @@ from datetime import timedelta
 from PIL import Image
 from src.telegramApi import client
 from src import aalib
-
+from src import npyscreen
 
 class ChatBox(npyscreen.BoxTitle):
 

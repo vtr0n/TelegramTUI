@@ -1,9 +1,10 @@
 import curses
 import weakref
-import npyscreen
 import email
 import mimetypes
 import os.path
+from . import npyscreen
+
 
 class EmailTreeLine(npyscreen.TreeLine):
     def display_value(self, vl):
