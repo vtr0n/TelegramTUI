@@ -1,7 +1,7 @@
 from . import wgmultilinetree as multilinetree
 from . import wgcheckbox      as checkbox
 import weakref
-
+import curses
 
 class MultiSelectTree(multilinetree.SelectOneTree):
     _contained_widgets = checkbox.Checkbox
