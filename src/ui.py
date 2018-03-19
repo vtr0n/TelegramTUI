@@ -1,4 +1,3 @@
-
 import textwrap
 import curses
 import configparser
@@ -8,6 +7,7 @@ from PIL import Image
 from src.telegramApi import client
 from src import aalib
 from src import npyscreen
+
 
 class ChatBox(npyscreen.BoxTitle):
 
@@ -89,6 +89,8 @@ class MainForm(npyscreen.FormBaseNew):
         color_data = []
         data = []
         for i in range(len(messages) - 1, -1, -1):
+            # replace empty char
+            messages[i].message = messages[i].message.replace(chr(8203), '')
             data.append(messages[i].name + " " + messages[i].message)
             color_data.append(messages[i].color)
 
@@ -249,14 +251,23 @@ class MainForm(npyscreen.FormBaseNew):
                 else:
                     read = "  "
 
+            # get name if message is forwarding
+            prepare_forward_message = self.prepare_forward_messages(messages[i])
+
             if dialog_type == 1 or dialog_type == 2:
-                offset = " " * (max_name_len - (len(users[messages[i].sender.id].name)))
-                name = read + users[messages[i].sender.id].name + ":" + offset
-                color = (len(read) + len(users[messages[i].sender.id].name)) * [users[messages[i].sender.id].color]
+                user_name = users[messages[i].sender.id].name
+                user_name = user_name if prepare_forward_message is False else prepare_forward_message
+
+                offset = " " * (max_name_len - (len(user_name)))
+                name = read + user_name + ":" + offset
+                color = (len(read) + len(user_name)) * [users[messages[i].sender.id].color]
 
             elif dialog_type == 3:
-                name = client.dialogs[current_user].name + ": "
-                color = len(name) * [self.theme_manager.findPair(self, 'WARNING')]
+                user_name = client.dialogs[current_user].name
+                user_name = user_name if prepare_forward_message is False else prepare_forward_message
+
+                name = user_name + ": "
+                color = len(user_name) * [self.theme_manager.findPair(self, 'WARNING')]
 
             else:
                 name = ""
@@ -266,27 +277,10 @@ class MainForm(npyscreen.FormBaseNew):
             mess = messages[i].message if hasattr(messages[i], 'message') \
                                           and isinstance(messages[i].message, str) else None
 
-            if self.aalib and media is not None:
-                # if file is not exist
-                if hasattr(media, 'photo'):
-                    if not os.path.isfile(os.getcwd() + "/downloads/" + str(media.photo.id) + ".jpg"):
-                        # download picture
-                        client.download_media(media, "downloads/" + str(media.photo.id))
-
-                    max_width = int((self.x - (self.x // 5) - len(name) - 11) / 1.3)
-                    max_height = int((self.y - 12) / 1.3)
-
-                    screen = aalib.AsciiScreen(width=max_width, height=max_height)
-                    image = Image.open(os.getcwd() + "/downloads/" + str(media.photo.id) + ".jpg").convert('L').resize(
-                        screen.virtual_size)
-                    screen.put_image((0, 0), image)
-                    image_text = screen.render()
-
-                    image_text = image_text.split("\n")
-                    for k in range(len(image_text) - 1, 0, -1):
-                        out.append(Messages(len(name) * " ", date, color, image_text[k], mess_id, read))
-                    out.append(Messages(name, date, color, image_text[0], mess_id, read))
-
+            if self.aalib and media is not None and hasattr(media, 'photo'):
+                image_name = name
+                name = len(name) * " "
+            # add message to return
             if mess is not None and mess != "":
                 if mess.find("\n") == -1:
                     if len(mess) + len(name) + len(read) > self.x - (self.x // 5) - 10:
@@ -299,6 +293,7 @@ class MainForm(npyscreen.FormBaseNew):
                         out.append(Messages(name, date, color, arr[0], mess_id, read))
                     else:
                         out.append(Messages(name, date, color, mess, mess_id, read))
+                # multiline message
                 else:
                     mess = mess.split("\n")
                     for j in range(len(mess) - 1, 0, -1):
@@ -322,8 +317,44 @@ class MainForm(npyscreen.FormBaseNew):
                     else:
                         out.append(Messages(name, date, color, mess[0], mess_id, read))
 
+            if self.aalib and media is not None:
+                # if file is not exist
+                if hasattr(media, 'photo'):
+                    if not os.path.isfile(os.getcwd() + "/downloads/" + str(media.photo.id) + ".jpg"):
+                        # download picture
+                        client.download_media(media, "downloads/" + str(media.photo.id))
+
+                    max_width = int((self.x - (self.x // 5) - len(image_name) - 11) / 1.3)
+                    max_height = int((self.y - 12) / 1.3)
+
+                    screen = aalib.AsciiScreen(width=max_width, height=max_height)
+                    image = Image.open(os.getcwd() + "/downloads/" + str(media.photo.id) + ".jpg").convert('L').resize(
+                        screen.virtual_size)
+                    screen.put_image((0, 0), image)
+                    image_text = screen.render()
+
+                    image_text = image_text.split("\n")
+                    for k in range(len(image_text) - 1, 0, -1):
+                        out.append(Messages(len(image_name) * " ", date, color, image_text[k], mess_id, read))
+                    out.append(Messages(image_name, date, color, image_text[0], mess_id, read))
+
         self.buff_messages[current_user] = out
         return out
+
+    def prepare_forward_messages(self, message):
+        user_name = False
+        fwd_from = message.fwd_from if hasattr(message, 'fwd_from') else None
+        if fwd_from is not None:
+            if fwd_from.from_id is not None:
+                sender = fwd_from.sender
+                user_name = sender.first_name if hasattr(sender, 'first_name') and \
+                                                 sender.first_name is not None else sender.last_name
+                user_name = "Forwarded from " + user_name
+
+            if fwd_from.channel_id is not None:
+                user_name = "Forwarded from " + fwd_from.channel.title
+
+        return user_name
 
     # events
     def event_chat_select(self, event):
