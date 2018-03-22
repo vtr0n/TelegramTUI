@@ -10,7 +10,7 @@ Telegram client on your console
 
 ### Installation
 `sudo apt-get install git python3 python3-pip`  
-`sudo pip3 install telethon`  
+`sudo pip3 install telethon python-aalib`  
 `git clone https://github.com/bad-day/TelegramTUI`   
 `cd TelegramTUI`
 
