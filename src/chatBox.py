@@ -1,5 +1,6 @@
 from src import npyscreen
 from src.telegramApi import client
+import time
 
 
 class ChatBox(npyscreen.BoxTitle):
@@ -37,7 +38,11 @@ class ChatBox(npyscreen.BoxTitle):
                 elif hasattr(client.dialogs[i].dialog.peer, 'chat_id'):
                     special = "$ "
 
-            unread += int(client.dialogs[i].unread_count)
+            timestamp = int(time.time())
+            mute_until = int(client.dialogs[i].dialog.notify_settings.mute_until)
+            if timestamp >= mute_until:
+                unread += int(client.dialogs[i].unread_count)
+
 
             highlight = []
             if client.online[i] == "Online":
@@ -46,14 +51,14 @@ class ChatBox(npyscreen.BoxTitle):
 
             if client.dialogs[i].unread_count != 0 and i != current_user:
                 data.append(special + client.dialogs[i].name + "[" + str(client.dialogs[i].unread_count) + "]")
-                color_data.append(len(special) * [color_new_message])
+                color = len(special) * [color_new_message] if timestamp >= mute_until else [0, 0]
+                color_data.append(color)
                 color_data[i].extend(highlight)
             else:
                 data.append(special + client.dialogs[i].name)
                 color_data.append([0, 0])
                 color_data[i].extend(highlight)
 
-        # come up with a feature about mute messages
         if unread != 0:
             self.name = self.parent.app_name + " " + "[" + str(unread) + "]"
         else:
