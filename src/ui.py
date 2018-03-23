@@ -53,7 +53,8 @@ class MainForm(npyscreen.FormBaseNew):
             curses.ascii.ESC: self.exit_func,
             # send message
             "^S": self.message_send,
-            138: self.message_send
+            curses.ascii.alt(curses.ascii.NL): self.message_send,
+            curses.ascii.alt(curses.KEY_ENTER): self.message_send
         }
         self.add_handlers(new_handlers)
 
