@@ -45,8 +45,6 @@ class MainForm(npyscreen.FormBaseNew):
 
         self.inputBoxObj = self.add(inputBox.InputBox, name="Input", relx=(x // 5) + 1, rely=-7)
 
-        # init buffer
-
         # inti handlers
         new_handlers = {
             # exit
@@ -85,11 +83,12 @@ class MainForm(npyscreen.FormBaseNew):
     def message_send(self, event):
         current_user = self.chatBoxObj.value
         message = self.inputBoxObj.value
-        client.message_send(message, current_user)
-        self.messageBoxObj.update_messages(current_user)
+        if message is not "":
+            client.message_send(message, current_user)
+            self.messageBoxObj.update_messages(current_user)
 
-        self.inputBoxObj.value = ""
-        self.inputBoxObj.display()
+            self.inputBoxObj.value = ""
+            self.inputBoxObj.display()
 
     def event_update_main_form(self, event):
         self.display()
