@@ -83,7 +83,7 @@ class MainForm(npyscreen.FormBaseNew):
     # handling methods
     def message_send(self, event):
         current_user = self.chatBoxObj.value
-        message = self.inputBoxObj.value
+        message = self.inputBoxObj.value.strip()
         if message is not "":
             client.message_send(message, current_user)
             self.messageBoxObj.update_messages(current_user)
