@@ -109,6 +109,7 @@ class MainForm(npyscreen.FormBaseNew):
     def while_waiting(self):
         current_user = self.chatBoxObj.value
 
+        client.client.sync_updates()
         if client.need_update_message:
             if client.need_update_current_user == current_user:
                 self.messageBoxObj.update_messages(current_user)
