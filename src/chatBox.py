@@ -60,9 +60,9 @@ class ChatBox(npyscreen.BoxTitle):
                 color_data[i].extend(highlight)
 
         if unread != 0:
-            self.name = self.parent.app_name + " " + "[" + str(unread) + "]"
+            self.parent.name = self.parent.app_name + " " + "[" + str(unread) + "]"
         else:
-            self.name = self.parent.app_name
+            self.parent.name = self.parent.app_name
 
         self.values = data
         self.entry_widget.custom_highlighting = True
