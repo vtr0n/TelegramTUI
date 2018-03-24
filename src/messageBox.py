@@ -52,18 +52,19 @@ class MessageBox(npyscreen.BoxTitle):
     def get_messages_info(self, current_user):
         messages = client.get_messages(current_user)
 
+        # get user info
+        users, dialog_type, max_name_len = self.get_user_info(messages, current_user)
+        max_read_mess = client.dialogs[current_user].dialog.read_outbox_max_id
+
         # check buffer
         buff = self.buff_messages[current_user]
         if buff is not None and messages is not None and \
                 len(buff) != 0 and len(messages) != 0 and \
-                buff[0].id == messages[0].id:
+                buff[0].id == messages[0].id and max_read_mess == self.buf_max_read_mess:
             return buff
 
-        # get user info
-        users, dialog_type, max_name_len = self.get_user_info(messages, current_user)
-        max_read_mess = client.dialogs[current_user].dialog.read_outbox_max_id
+        self.buf_max_read_mess = max_read_mess
         out = []
-
         for i in range(len(messages)):
             date = messages[i].date
             mess_id = messages[i].id

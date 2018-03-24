@@ -1,7 +1,6 @@
 from telethon import TelegramClient, events
 import configparser
 from datetime import timedelta
-import time
 
 class TelegramApi:
     client = None
