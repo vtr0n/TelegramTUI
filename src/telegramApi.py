@@ -140,9 +140,6 @@ class TelegramApi:
     def file_send(self, file, user_id, func):
         data = self.client.send_file(self.dialogs[user_id].entity, file, progress_callback=func)
 
-        # read message
-        self.client.send_read_acknowledge(self.dialogs[user_id].entity, max_id=data.id)
-
         # save message
         new_message = self.client.get_message_history(self.dialogs[user_id].entity, min_id=(data.id - 1))
 

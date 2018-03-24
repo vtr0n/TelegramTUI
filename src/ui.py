@@ -162,6 +162,8 @@ class SendFileForm(npyscreen.ActionForm):
         if os.path.isfile(self.filename.value):
             current_user = self.parentApp.MainForm.chatBoxObj.value
             client.file_send(self.filename.value, current_user, self.download_progress)
+            # need change it
+            self.parentApp.MainForm.messageBoxObj.update_messages(current_user)
 
             self.status.value = ""
             self.parentApp.switchForm("MAIN")
