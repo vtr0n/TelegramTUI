@@ -32,5 +32,6 @@ cd TelegramTUI
 ### Controls
 * Navigation: `Tab`, `Shift+Tab`, `mouse`  
 * Send message: `Ctrl+S`, `Alt+Enter`  
+* Send file: `Ctrl+O`  
 * Exit: `Ctrl+Q`, `ESC`  
 * Paste: `Shift+INS`

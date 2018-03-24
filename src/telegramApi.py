@@ -1,7 +1,7 @@
 from telethon import TelegramClient, events
 import configparser
 from datetime import timedelta
-
+import time
 
 class TelegramApi:
     client = None
@@ -125,6 +125,21 @@ class TelegramApi:
 
     def message_send(self, message, user_id):
         data = self.client.send_message(self.dialogs[user_id].entity, message)
+
+        # read message
+        self.client.send_read_acknowledge(self.dialogs[user_id].entity, max_id=data.id)
+
+        # save message
+        new_message = self.client.get_message_history(self.dialogs[user_id].entity, min_id=(data.id - 1))
+
+        for j in range(len(new_message) - 1, -1, -1):
+            self.messages[user_id].insert(0, new_message[j])
+
+        self.messages[user_id].sort(key=lambda x: x.id, reverse=True)
+        self.remove_duplicates(self.messages[user_id])
+
+    def file_send(self, file, user_id, func):
+        data = self.client.send_file(self.dialogs[user_id].entity, file, progress_callback=func)
 
         # read message
         self.client.send_read_acknowledge(self.dialogs[user_id].entity, max_id=data.id)

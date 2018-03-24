@@ -110,8 +110,7 @@ class MessageBox(npyscreen.BoxTitle):
             self.prepare_message(out, mess, name, read, mess_id, color, date)
 
             # add media to out []
-            if self.aalib and media is not None:
-                self.prepare_media(out, media, image_name, read, mess_id, color, date)
+            self.prepare_media(out, media, name, image_name, read, mess_id, color, date)
 
         # update buffer
         self.buff_messages[current_user] = out
@@ -245,23 +244,29 @@ class MessageBox(npyscreen.BoxTitle):
                     out.append(self.Messages(name, date, color, mess[0], mess_id, read))
 
     # add media to Message structure
-    def prepare_media(self, out, media, image_name, read, mess_id, color, date):
-        # if file is not exist
-        if hasattr(media, 'photo'):
-            if not os.path.isfile(os.getcwd() + "/downloads/" + str(media.photo.id) + ".jpg"):
-                # download picture
-                client.download_media(media, "downloads/" + str(media.photo.id))
+    def prepare_media(self, out, media, name, image_name, read, mess_id, color, date):
+        if media is not None:
+            if hasattr(media, 'photo') and self.aalib:
+                if not os.path.isfile(os.getcwd() + "/downloads/" + str(media.photo.id) + ".jpg"):
+                    # download picture
+                    client.download_media(media, "downloads/" + str(media.photo.id))
 
-            max_width = int((self.width - len(image_name) - 11) / 1.3)
-            max_height = int((self.height - 12) / 1.3)
+                max_width = int((self.width - len(image_name) - 11) / 1.3)
+                max_height = int((self.height - 12) / 1.3)
 
-            screen = aalib.AsciiScreen(width=max_width, height=max_height)
-            image = Image.open(os.getcwd() + "/downloads/" + str(media.photo.id) + ".jpg").convert('L').resize(
-                screen.virtual_size)
-            screen.put_image((0, 0), image)
-            image_text = screen.render()
+                screen = aalib.AsciiScreen(width=max_width, height=max_height)
+                image = Image.open(os.getcwd() + "/downloads/" + str(media.photo.id) + ".jpg").convert('L').resize(
+                    screen.virtual_size)
+                screen.put_image((0, 0), image)
+                image_text = screen.render()
 
-            image_text = image_text.split("\n")
-            for k in range(len(image_text) - 1, 0, -1):
-                out.append(self.Messages(len(image_name) * " ", date, color, image_text[k], mess_id, read))
-            out.append(self.Messages(image_name, date, color, image_text[0], mess_id, read))
+                image_text = image_text.split("\n")
+                for k in range(len(image_text) - 1, 0, -1):
+                    out.append(self.Messages(len(image_name) * " ", date, color, image_text[k], mess_id, read))
+                out.append(self.Messages(image_name, date, color, image_text[0], mess_id, read))
+
+            elif hasattr(media, 'photo') and not self.aalib:
+                out.append(self.Messages(name, date, color, "<Image>", mess_id, read))
+
+            elif hasattr(media, 'document'):
+                out.append(self.Messages(name, date, color, "<Document>", mess_id, read))
