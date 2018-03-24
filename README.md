@@ -9,10 +9,20 @@ Telegram client on your console
 * [python-aalib](http://jwilk.net/software/python-aalib)
 
 ### Installation
-`sudo apt-get install git python3 python3-pip`  
-`sudo pip3 install telethon python-aalib`  
-`git clone https://github.com/bad-day/TelegramTUI`   
-`cd TelegramTUI`
+#### Debian based
+```shell 
+sudo apt-get install git python python3-pip aalib1
+sudo pip3 install pillow telethon python-aalib 
+git clone https://github.com/bad-day/TelegramTUI  
+cd TelegramTUI  
+```
+#### Arch linux
+```shell 
+sudo pacman -S git python3 python-pip aalib
+sudo pip3 install pillow telethon python-aalib 
+git clone https://github.com/bad-day/TelegramTUI  
+cd TelegramTUI  
+```
 
 ### Usage
 * [Create application](https://core.telegram.org/api/obtaining_api_id)  
