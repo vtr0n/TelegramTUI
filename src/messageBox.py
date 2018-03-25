@@ -81,6 +81,7 @@ class MessageBox(npyscreen.BoxTitle):
             if dialog_type == 1 or dialog_type == 2:
                 user_name = users[messages[i].sender.id].name
                 user_name = user_name if prepare_forward_message is False else prepare_forward_message
+                user_name = textwrap.wrap(user_name, self.width // 5)[0]
 
                 offset = " " * (max_name_len - (len(user_name)))
                 name = read + user_name + ":" + offset
@@ -90,6 +91,7 @@ class MessageBox(npyscreen.BoxTitle):
             elif dialog_type == 3:
                 user_name = client.dialogs[current_user].name
                 user_name = user_name if prepare_forward_message is False else prepare_forward_message
+                user_name = textwrap.wrap(user_name, self.width // 5)[0]
 
                 name = user_name + ": "
                 color = len(user_name) * [self.parent.theme_manager.findPair(self, 'WARNING')]
@@ -187,10 +189,10 @@ class MessageBox(npyscreen.BoxTitle):
                 sender = fwd_from.sender
                 user_name = sender.first_name if hasattr(sender, 'first_name') and \
                                                  sender.first_name is not None else sender.last_name
-                user_name = "Forwarded from " + user_name
+                user_name = "Fwd " + user_name
 
             if fwd_from.channel_id is not None:
-                user_name = "Forwarded from " + fwd_from.channel.title
+                user_name = "Fwd " + fwd_from.channel.title
 
         return user_name
 
