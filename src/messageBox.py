@@ -250,23 +250,26 @@ class MessageBox(npyscreen.BoxTitle):
     def prepare_media(self, out, media, name, image_name, read, mess_id, color, date):
         if media is not None:
             if hasattr(media, 'photo') and self.aalib:
-                if not os.path.isfile(os.getcwd() + "/downloads/" + str(media.photo.id) + ".jpg"):
-                    # download picture
-                    client.download_media(media, "downloads/" + str(media.photo.id))
+                try:
+                    if not os.path.isfile(os.getcwd() + "/downloads/" + str(media.photo.id) + ".jpg"):
+                        # download picture
+                        client.download_media(media, "downloads/" + str(media.photo.id))
 
-                max_width = int((self.width - len(image_name) - 11) / 1.3)
-                max_height = int((self.height - 12) / 1.3)
+                    max_width = int((self.width - len(image_name) - 11) / 1.3)
+                    max_height = int((self.height - 12) / 1.3)
 
-                screen = aalib.AsciiScreen(width=max_width, height=max_height)
-                image = Image.open(os.getcwd() + "/downloads/" + str(media.photo.id) + ".jpg").convert('L').resize(
-                    screen.virtual_size)
-                screen.put_image((0, 0), image)
-                image_text = screen.render()
+                    screen = aalib.AsciiScreen(width=max_width, height=max_height)
+                    image = Image.open(os.getcwd() + "/downloads/" + str(media.photo.id) + ".jpg").convert('L').resize(
+                        screen.virtual_size)
+                    screen.put_image((0, 0), image)
+                    image_text = screen.render()
 
-                image_text = image_text.split("\n")
-                for k in range(len(image_text) - 1, 0, -1):
-                    out.append(self.Messages(len(image_name) * " ", date, color, image_text[k], mess_id, read))
-                out.append(self.Messages(image_name, date, color, image_text[0], mess_id, read))
+                    image_text = image_text.split("\n")
+                    for k in range(len(image_text) - 1, 0, -1):
+                        out.append(self.Messages(len(image_name) * " ", date, color, image_text[k], mess_id, read))
+                    out.append(self.Messages(image_name, date, color, image_text[0], mess_id, read))
+                except:
+                    out.append(self.Messages(image_name, date, color, "<Unknown photo>", mess_id, read))
 
             elif hasattr(media, 'photo') and not self.aalib:
                 out.append(self.Messages(name, date, color, "<Image>", mess_id, read))
