@@ -275,4 +275,10 @@ class MessageBox(npyscreen.BoxTitle):
                 out.append(self.Messages(name, date, color, "<Image>", mess_id, read))
 
             elif hasattr(media, 'document'):
-                out.append(self.Messages(name, date, color, "<Document>", mess_id, read))
+                try:
+                    # print sticker like a emoji
+                    if hasattr(media.document.attributes[1], 'stickerset'):
+                        out.append(self.Messages(name, date, color,
+                                                 "Sticker: " + media.document.attributes[1].alt, mess_id, read))
+                except:
+                    out.append(self.Messages(name, date, color, "<Document>", mess_id, read))
