@@ -16,7 +16,8 @@ class MessageBox(npyscreen.BoxTitle):
         self.buff_messages = len(client.dialogs) * [None]
 
     def when_value_edited(self):
-        pass
+        if self.value is not None:
+            self.parent.parentApp.switchForm("MESSAGE_INFO")
 
     def when_cursor_moved(self):
         self.parent.parentApp.queue_event(npyscreen.Event("event_messagebox_change_cursor"))
