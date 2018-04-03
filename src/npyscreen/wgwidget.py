@@ -113,8 +113,8 @@ but in most cases the add_handers or add_complex_handlers methods are what you w
                    curses.KEY_UP:       self.h_exit_up,
                    curses.KEY_LEFT:     self.h_exit_left,
                    curses.KEY_RIGHT:    self.h_exit_right,
-                   "^P":                self.h_exit_up,
-                   "^N":                self.h_exit_down,
+                   # "^P":                self.h_exit_up,
+                   # "^N":                self.h_exit_down,
                    curses.ascii.ESC:    self.h_exit_escape,
                    curses.KEY_MOUSE:    self.h_exit_mouse,
                    }
