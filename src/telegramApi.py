@@ -1,4 +1,5 @@
 from telethon import TelegramClient, events
+import socks
 import configparser
 from datetime import timedelta
 
@@ -23,8 +24,25 @@ class TelegramApi:
         self.timezone = int(config.get('other', 'timezone'))
         self.message_dialog_len = int(config.get('app', 'message_dialog_len'))
 
+        # proxy settings
+        if config.get('proxy', 'type') == "HTTP":
+            proxy_type = socks.HTTP
+        elif config.get('proxy', 'type') == "SOCKS4":
+            proxy_type = socks.SOCKS4
+        elif config.get('proxy', 'type') == "SOCKS5":
+            proxy_type = socks.SOCKS5
+        else:
+            proxy_type = None
+        proxy_addr = config.get('proxy', 'addr')
+        proxy_port = int(config.get('proxy', 'port'))
+        proxy_username = config.get('proxy', 'username')
+        proxy_password = config.get('proxy', 'password')
+
+        proxy = (proxy_type, proxy_addr, proxy_port, proxy_username, proxy_password)
+
+        # create connection
         self.client = TelegramClient(session_name, api_id, api_hash, update_workers=int(workers),
-                                     spawn_read_thread=True)
+                                     spawn_read_thread=True, proxy=proxy)
         self.client.start()
 
         self.me = self.client.get_me()
