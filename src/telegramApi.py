@@ -34,7 +34,7 @@ class TelegramApi:
         else:
             proxy_type = None
         proxy_addr = config.get('proxy', 'addr')
-        proxy_port = int(config.get('proxy', 'port'))
+        proxy_port = int(config.get('proxy', 'port')) if config.get('proxy', 'port').isdigit() else None
         proxy_username = config.get('proxy', 'username')
         proxy_password = config.get('proxy', 'password')
 
