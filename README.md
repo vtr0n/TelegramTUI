@@ -30,8 +30,9 @@ cd TelegramTUI
 * Run `./telegramTUI`
 
 ### Controls
-* Navigation: `Tab`, `Shift+Tab`, `mouse`  
+* Navigation: `Tab`, `Shift+Tab`, `Mouse`
 * Send message: `Ctrl+S`, `Alt+Enter`  
 * Send file: `Ctrl+O`  
 * Exit: `Ctrl+Q`, `ESC`  
-* Paste: `Shift+INS`
+* Copy: `Shift+Mouse`
+* Paste: `Shift+Ins`, `Shift+Middle mouse button`
