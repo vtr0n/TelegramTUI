@@ -137,6 +137,12 @@ class TelegramApi:
         else:
             return self.messages[user_id]
 
+    def get_message_by_id(self, user_id, message_id):
+        for i in range(len(self.messages[user_id])):
+            if self.messages[user_id][i].id == message_id:
+                return self.messages[user_id][i]
+        # return self.client.get_message_history(self.dialogs[user_id].entity, limit=1, min_id=message_id-1)
+
     def download_media(self, media, path):
         return self.client.download_media(media, path)
 

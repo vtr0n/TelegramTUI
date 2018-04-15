@@ -17,6 +17,7 @@ class MessageBox(npyscreen.BoxTitle):
 
     def when_value_edited(self):
         if self.value is not None:
+            self.parent.parentApp.getForm("MESSAGE_INFO").update()
             self.parent.parentApp.switchForm("MESSAGE_INFO")
 
     def when_cursor_moved(self):
