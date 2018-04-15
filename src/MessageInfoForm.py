@@ -1,6 +1,5 @@
 import curses
 import configparser
-import os
 from src.telegramApi import client
 from src import npyscreen
 import textwrap
@@ -24,8 +23,9 @@ class MessageInfoForm(npyscreen.ActionForm):
         self.timezone = int(config.get('other', 'timezone'))
 
         self.mess_id = self.add(npyscreen.TitleText, name="Message id:", editable=False)
-        self.sender = self.add(npyscreen.TitleText, name="Sender:    ", editable=False)
         self.date = self.add(npyscreen.TitleText, name="Date:      ", editable=False)
+        self.sender = self.add(npyscreen.TitleText, name="Sender:    ", editable=False)
+        self.forward = self.add(npyscreen.TitleText, name="Fwd from:  ", editable=False)
         self.attachment = self.add(npyscreen.TitleText, name="Attachment:", editable=False)
         self.text = self.add(npyscreen.TitleMultiLine, name="Text:      ", max_height=5, scroll_exit=True)
 
@@ -39,10 +39,11 @@ class MessageInfoForm(npyscreen.ActionForm):
         message_info = client.get_message_by_id(current_user, current_id)
         prepared_text = self.prepare_message(message_info.message)
 
-        self.sender.value = current_user_name
+        self.sender.value = current_user_name + " (id " + str(client.dialogs[current_user].entity.id) + ")"
         self.mess_id.value = current_id
         self.date.value = str(messages[-current_message - 1].date + (timedelta(self.timezone) // 24))
         self.attachment.value = self.prepare_media(message_info)
+        self.forward.value = self.prepare_forward_messages(message_info)
         self.text.values = prepared_text
         self.text.max_height = len(prepared_text)
         self.display()
@@ -55,10 +56,10 @@ class MessageInfoForm(npyscreen.ActionForm):
             mess = mess.split("\n")
             for i in range(len(mess)):
                 if len(mess[i]) > x - 10:
-                        max_char = x - 10
-                        arr = textwrap.wrap(mess[i], max_char)
-                        for j in range(len(arr)):
-                            out.append(arr[j])
+                    max_char = x - 10
+                    arr = textwrap.wrap(mess[i], max_char)
+                    for j in range(len(arr)):
+                        out.append(arr[j])
                 else:
                     out.append(mess[i])
         return out
@@ -81,6 +82,20 @@ class MessageInfoForm(npyscreen.ActionForm):
             out = "None"
 
         return out
+
+    def prepare_forward_messages(self, message):
+        user_name = "None"
+        fwd_from = message.fwd_from if hasattr(message, 'fwd_from') else None
+        if fwd_from is not None:
+            if fwd_from.from_id is not None:
+                sender = fwd_from.sender
+                user_name = sender.first_name + " " + sender.last_name if hasattr(sender, 'first_name') and \
+                                                                          sender.first_name is not None else sender.last_name
+                user_name += " (id " + str(fwd_from.from_id) + ")"
+            if fwd_from.channel_id is not None:
+                user_name = fwd_from.channel.title + " (id " + str(fwd_from.channel.id) + ")"
+
+        return user_name
 
     def on_ok(self):
         self.parentApp.switchForm("MAIN")
