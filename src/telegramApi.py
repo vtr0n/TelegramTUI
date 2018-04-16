@@ -3,6 +3,7 @@ import socks
 import configparser
 from datetime import timedelta
 
+
 class TelegramApi:
     client = None
     dialogs = []
@@ -38,7 +39,7 @@ class TelegramApi:
         proxy_username = config.get('proxy', 'username')
         proxy_password = config.get('proxy', 'password')
 
-        proxy = (proxy_type, proxy_addr, proxy_port, proxy_username, proxy_password)
+        proxy = (proxy_type, proxy_addr, proxy_port, False, proxy_username, proxy_password)
 
         # create connection
         self.client = TelegramClient(session_name, api_id, api_hash, update_workers=int(workers),
@@ -143,12 +144,14 @@ class TelegramApi:
                 return self.messages[user_id][i]
         # return self.client.get_message_history(self.dialogs[user_id].entity, limit=1, min_id=message_id-1)
 
+    def delete_message(self, user_id, message_id):
+        self.client.delete_messages(self.dialogs[user_id].entity, message_id)
+
     def download_media(self, media, path):
         return self.client.download_media(media, path)
 
-    def message_send(self, message, user_id):
-        data = self.client.send_message(self.dialogs[user_id].entity, message)
-
+    def message_send(self, message, user_id, reply=None):
+        data = self.client.send_message(self.dialogs[user_id].entity, message, reply_to=reply)
         # read message
         self.client.send_read_acknowledge(self.dialogs[user_id].entity, max_id=data.id)
 
