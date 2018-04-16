@@ -29,10 +29,14 @@ cd TelegramTUI
 * Put **api_id** and **api_hash** into **config.ini**  
 * Run `./telegramTUI`
 
+### Proxy
+You can set proxy in config.ini
+
 ### Controls
 * Navigation: `Tab`, `Shift+Tab`, `Mouse`
 * Send message: `Ctrl+S`, `Alt+Enter`  
-* Send file: `Ctrl+O`  
+* Delete message: `Ctrl+R`
+* Send file: `Ctrl+O`
 * Exit: `Ctrl+Q`, `ESC`  
 * Copy: `Shift+Mouse`
 * Paste: `Shift+Ins`, `Shift+Middle mouse button`

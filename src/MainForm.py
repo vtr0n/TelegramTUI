@@ -55,6 +55,12 @@ class MainForm(npyscreen.FormBaseNew):
             "^S": self.message_send,
             curses.ascii.alt(curses.ascii.NL): self.message_send,
             curses.ascii.alt(curses.KEY_ENTER): self.message_send,
+            # forward message
+            "^F": self.forward_message,
+            # delete message
+            "^R": self.remove_message,
+            # delete message
+            "^D": self.download_file,
             # send file
             "^O": self.file_send
         }
@@ -95,6 +101,16 @@ class MainForm(npyscreen.FormBaseNew):
 
     def file_send(self, event):
         self.parentApp.switchForm("SEND_FILE")
+
+    def forward_message(self, event):
+        pass
+        # self.parentApp.switchForm("FORWARD_MESSAGE")
+
+    def remove_message(self, event):
+        self.parentApp.switchForm("REMOVE_MESSAGE")
+
+    def download_file(self, event):
+        pass
 
     def event_update_main_form(self, event):
         self.display()
