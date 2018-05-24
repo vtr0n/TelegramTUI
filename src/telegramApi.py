@@ -73,7 +73,7 @@ class TelegramApi:
                     pass
 
         # event for read messages
-        @self.client.on(events.Raw(chats=None, blacklist_chats=False))
+        @self.client.on(events.Raw())
         def my_event_handler(event):
             if hasattr(event, 'confirm_received') and hasattr(event, 'max_id'):
                 for i in range(len(self.dialogs)):
