@@ -84,8 +84,10 @@ class MessageBox(npyscreen.BoxTitle):
             if dialog_type == 1 or dialog_type == 2:
                 user_name = users[messages[i].sender.id].name
                 user_name = user_name if prepare_forward_message is False else prepare_forward_message
-                user_name = textwrap.wrap(user_name, self.width // 5)[0]
-
+                if(len(user_name)!=0):
+                    user_name = textwrap.wrap(user_name, self.width // 5)[0]
+                else:
+                    user_name = "Deleted Account"
                 offset = " " * (max_name_len - (len(user_name)))
                 name = read + user_name + ":" + offset
                 color = (len(read) + len(user_name)) * [users[messages[i].sender.id].color]
