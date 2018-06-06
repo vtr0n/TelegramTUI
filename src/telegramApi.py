@@ -44,7 +44,11 @@ class TelegramApi:
         # create connection
         self.client = TelegramClient(session_name, api_id, api_hash, update_workers=int(workers),
                                      spawn_read_thread=True, proxy=proxy)
-        self.client.start()
+        try:
+            self.client.start()
+        except:
+            print("Something wrong with your connection")
+            exit(1)
 
         self.me = self.client.get_me()
         self.dialogs = self.client.get_dialogs(limit=self.message_dialog_len)
