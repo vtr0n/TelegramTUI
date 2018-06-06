@@ -191,10 +191,13 @@ class MessageBox(npyscreen.BoxTitle):
         fwd_from = message.fwd_from if hasattr(message, 'fwd_from') else None
         if fwd_from is not None:
             if fwd_from.from_id is not None:
-                sender = fwd_from.sender
-                user_name = sender.first_name if hasattr(sender, 'first_name') and \
-                                                 sender.first_name is not None else sender.last_name
-                user_name = "Fwd " + user_name
+                if hasattr(fwd_from, 'sender'):
+                    sender = fwd_from.sender
+                    user_name = sender.first_name if hasattr(sender, 'first_name') and \
+                                                     sender.first_name is not None else sender.last_name
+                    user_name = "Fwd " + user_name
+                else:
+                    user_name = "Fwd Unknown"
 
             if fwd_from.channel_id is not None:
                 user_name = "Fwd " + fwd_from.channel.title
