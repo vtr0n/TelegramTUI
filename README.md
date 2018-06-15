@@ -19,7 +19,7 @@ cd TelegramTUI
 #### Arch linux
 ```shell 
 sudo pacman -S git python3 python-pip aalib
-sudo pip3 install pillow telethon python-aalib pysocks
+sudo pip3 install pillow telethon==0.19.1.6 python-aalib pysocks
 git clone https://github.com/bad-day/TelegramTUI  
 cd TelegramTUI  
 ```
