@@ -39,10 +39,12 @@ class ChatBox(npyscreen.BoxTitle):
                     special = "$ "
 
             timestamp = int(time.time())
-            mute_until = int(client.dialogs[i].dialog.notify_settings.mute_until)
-            if timestamp >= mute_until:
-                unread += int(client.dialogs[i].unread_count)
 
+            mute_until = client.dialogs[i].dialog.notify_settings.mute_until
+            mute_until = 0 if mute_until is None else int(mute_until)
+
+            if timestamp >= int(mute_until):
+                unread += int(client.dialogs[i].unread_count)
 
             highlight = []
             if client.online[i] == "Online":
