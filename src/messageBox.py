@@ -1,10 +1,12 @@
 from src import npyscreen
 from src.telegramApi import client
 import textwrap
-import aalib
 from PIL import Image
 import os.path
+import platform
 
+if platform.system() != 'Darwin':
+    import aalib
 
 class MessageBox(npyscreen.BoxTitle):
 
