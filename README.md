@@ -12,7 +12,7 @@ Telegram client on your console
 #### Debian based
 ```shell 
 sudo apt-get install git python python3-pip aalib1
-sudo pip3 install pillow telethon python-aalib pysocks
+sudo pip3 install pillow telethon==0.19.1.6 python-aalib pysocks
 git clone https://github.com/bad-day/TelegramTUI  
 cd TelegramTUI  
 ```
