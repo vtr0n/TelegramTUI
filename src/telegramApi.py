@@ -54,7 +54,7 @@ class TelegramApi:
         self.dialogs = self.client.get_dialogs(limit=self.message_dialog_len)
         self.messages = len(self.dialogs) * [None]
         self.online = len(self.dialogs) * [""]
-        self.messages[0] = self.client.get_message_history(self.dialogs[0].entity, limit=self.message_dialog_len)
+        self.messages[0] = self.client.get_messages(self.dialogs[0].entity, limit=self.message_dialog_len)
 
         # event for new messages
         @self.client.on(events.NewMessage)
@@ -116,10 +116,10 @@ class TelegramApi:
     def event_message(self, user_id):
         if self.messages[user_id] is None:
             self.get_messages(user_id)
-            new_message = self.client.get_message_history(self.dialogs[user_id].entity,
+            new_message = self.client.get_messages(self.dialogs[user_id].entity,
                                                           min_id=self.messages[user_id][0].id - 1)
         else:
-            new_message = self.client.get_message_history(self.dialogs[user_id].entity,
+            new_message = self.client.get_messages(self.dialogs[user_id].entity,
                                                           min_id=self.messages[user_id][0].id)
 
         for j in range(len(new_message) - 1, -1, -1):
@@ -134,7 +134,7 @@ class TelegramApi:
 
     def get_messages(self, user_id):
         if self.messages[user_id] is None:
-            data = self.client.get_message_history(self.dialogs[user_id].entity, limit=self.message_dialog_len)
+            data = self.client.get_messages(self.dialogs[user_id].entity, limit=self.message_dialog_len)
             # need check exceptions
             self.messages[user_id] = data
             self.messages[user_id].sort(key=lambda x: x.id, reverse=True)
@@ -146,7 +146,7 @@ class TelegramApi:
         for i in range(len(self.messages[user_id])):
             if self.messages[user_id][i].id == message_id:
                 return self.messages[user_id][i]
-        # return self.client.get_message_history(self.dialogs[user_id].entity, limit=1, min_id=message_id-1)
+        # return self.client.get_messages(self.dialogs[user_id].entity, limit=1, min_id=message_id-1)
 
     def delete_message(self, user_id, message_id):
         self.client.delete_messages(self.dialogs[user_id].entity, message_id)
@@ -160,7 +160,7 @@ class TelegramApi:
         self.client.send_read_acknowledge(self.dialogs[user_id].entity, max_id=data.id)
 
         # save message
-        new_message = self.client.get_message_history(self.dialogs[user_id].entity, min_id=(data.id - 1))
+        new_message = self.client.get_messages(self.dialogs[user_id].entity, min_id=(data.id - 1))
 
         for j in range(len(new_message) - 1, -1, -1):
             self.messages[user_id].insert(0, new_message[j])
@@ -172,7 +172,7 @@ class TelegramApi:
         data = self.client.send_file(self.dialogs[user_id].entity, file, progress_callback=func)
 
         # save message
-        new_message = self.client.get_message_history(self.dialogs[user_id].entity, min_id=(data.id - 1))
+        new_message = self.client.get_messages(self.dialogs[user_id].entity, min_id=(data.id - 1))
 
         for j in range(len(new_message) - 1, -1, -1):
             self.messages[user_id].insert(0, new_message[j])
