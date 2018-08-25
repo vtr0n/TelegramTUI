@@ -15,7 +15,8 @@ class NPSEventQueue(object):
             try:
                 yield self.interal_queue.pop()
             except IndexError:
-                raise StopIteration
+                pass
+                #raise StopIteration
             counter += 1
     
     def put(self, event):
@@ -49,7 +50,10 @@ class StandardApp(NPSAppManaged, EventHandler):
     def process_event_queues(self, max_events_per_queue=None):
         for queue in self.event_queues.values():
             for event in queue.get(maximum=max_events_per_queue):
-                self.process_event(event)
+                try:
+                    self.process_event(event)
+                except:
+                    pass
     
     def register_for_event(self, registering_object, event_name):
         if event_name not in self.event_directory:
