@@ -23,7 +23,13 @@ sudo pip3 install pillow telethon==0.19.1.6 python-aalib pysocks
 git clone https://github.com/bad-day/TelegramTUI  
 cd TelegramTUI  
 ```
-
+#### OS X
+```shell 
+brew install python3 git
+sudo pip3 install pillow telethon==0.19.1.6 python-aalib pysocks
+git clone https://github.com/bad-day/TelegramTUI  
+cd TelegramTUI  
+```
 ### Usage
 * [Create application](https://core.telegram.org/api/obtaining_api_id)  
 * Put **api_id** and **api_hash** into **config.ini**  
