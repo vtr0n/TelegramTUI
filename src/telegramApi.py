@@ -46,8 +46,8 @@ class TelegramApi:
                                      spawn_read_thread=True, proxy=proxy)
         try:
             self.client.start()
-        except:
-            print("Something wrong with your connection")
+        except Exception as ex:
+            print("Something wrong: " + str(ex))
             exit(1)
 
         self.me = self.client.get_me()
