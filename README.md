@@ -9,31 +9,13 @@ Telegram client on your console
 * [python-aalib](http://jwilk.net/software/python-aalib)
 
 ### Installation
-#### Debian based
-```shell 
-sudo apt-get install git python python3-pip aalib1
-sudo pip3 install pillow telethon==0.19.1.6 python-aalib pysocks
-git clone https://github.com/bad-day/TelegramTUI  
-cd TelegramTUI  
-```
-#### Arch linux
-```shell 
-sudo pacman -S git python3 python-pip aalib
-sudo pip3 install pillow telethon==0.19.1.6 python-aalib pysocks
-git clone https://github.com/bad-day/TelegramTUI  
-cd TelegramTUI  
-```
-#### OS X
-```shell 
-brew install python3 git
-sudo pip3 install pillow telethon==0.19.1.6 python-aalib pysocks
-git clone https://github.com/bad-day/TelegramTUI  
-cd TelegramTUI  
-```
-### Usage
-* [Create application](https://core.telegram.org/api/obtaining_api_id)  
-* Put **api_id** and **api_hash** into **config.ini**  
-* Run `./telegramTUI`
+* Create [telegram application](https://core.telegram.org/api/obtaining_api_id).
+* Install pipenv ```pip install pipenv```.
+* Clone repo ```git clone https://github.com/bad-day/TelegramTUI && cd TelegramTUI```.
+* Install requirements ```pipenv install```.
+* Copy config.ini.sample to config.ini ```cp config.ini.sample config.ini```.
+* Put **api_id** and **api_hash** into **config.ini** ```vim config.ini```.
+* Run TelegramTUI ```pipenv run ./telegramTUI```.
 
 ### Proxy
 You can set proxy in config.ini
