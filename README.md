@@ -9,13 +9,13 @@ Telegram client on your console
 * [python-aalib](http://jwilk.net/software/python-aalib)
 
 ### Installation
-* Create [telegram application](https://core.telegram.org/api/obtaining_api_id).
-* Install pipenv ```pip install pipenv```.
-* Clone repo ```git clone https://github.com/bad-day/TelegramTUI && cd TelegramTUI```.
-* Install requirements ```pipenv install```.
-* Copy config.ini.sample to config.ini ```cp config.ini.sample config.ini```.
-* Put **api_id** and **api_hash** into **config.ini** ```vim config.ini```.
-* Run TelegramTUI ```pipenv run ./telegramTUI```.
+* Create [telegram application](https://core.telegram.org/api/obtaining_api_id)
+* Install pipenv ```pip install pipenv```
+* Clone repo ```git clone https://github.com/bad-day/TelegramTUI && cd TelegramTUI```
+* Install requirements ```pipenv install```
+* Copy config.ini.sample to config.ini ```cp config.ini.sample config.ini```
+* Put **api_id** and **api_hash** into **config.ini** ```vim config.ini```
+* Run TelegramTUI ```pipenv run ./telegramTUI```
 
 ### Proxy
 You can set proxy in config.ini
