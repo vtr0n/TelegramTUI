@@ -1,9 +1,9 @@
 import curses
-import configparser
-from src.telegramApi import client
-from src import npyscreen
+from telegramtui.src.telegramApi import client
+from telegramtui.src import npyscreen
 import textwrap
 from datetime import timedelta
+from telegramtui.src.config import get_config
 
 
 class MessageInfoForm(npyscreen.ActionForm):
@@ -18,8 +18,7 @@ class MessageInfoForm(npyscreen.ActionForm):
         }
         self.add_handlers(new_handlers)
 
-        config = configparser.ConfigParser()
-        config.read('config.ini')
+        config = get_config()
         self.timezone = int(config.get('other', 'timezone'))
 
         self.mess_id = self.add(npyscreen.TitleText, name="Message id:", editable=False)

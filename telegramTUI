@@ -1,6 +1,0 @@
-#!/usr/bin/env python3
-from src.ui import App
-
-if __name__ == "__main__":
-    TelegeramTUI = App()
-    TelegeramTUI.run()

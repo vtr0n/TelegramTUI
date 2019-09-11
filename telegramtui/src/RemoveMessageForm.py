@@ -1,6 +1,6 @@
 import curses
-from src.telegramApi import client
-from src import npyscreen
+from telegramtui.src.telegramApi import client
+from telegramtui.src import npyscreen
 
 
 class RemoveMessageForm(npyscreen.ActionForm):

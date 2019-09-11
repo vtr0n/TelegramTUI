@@ -1,10 +1,10 @@
-from src import npyscreen
-from src.MainForm import MainForm
-from src.ContactsForm import ContactsForm
-from src.SendFileForm import SendFileForm
-from src.MessageInfoForm import MessageInfoForm
-from src.ForwardMessageForm import ForwardMessageForm
-from src.RemoveMessageForm import RemoveMessageForm
+from telegramtui.src import npyscreen
+from telegramtui.src.MainForm import MainForm
+from telegramtui.src.ContactsForm import ContactsForm
+from telegramtui.src.SendFileForm import SendFileForm
+from telegramtui.src.MessageInfoForm import MessageInfoForm
+from telegramtui.src.ForwardMessageForm import ForwardMessageForm
+from telegramtui.src.RemoveMessageForm import RemoveMessageForm
 
 
 class App(npyscreen.StandardApp):

@@ -1,4 +1,4 @@
-from src import npyscreen
+from telegramtui.src import npyscreen
 
 
 class InputBox(npyscreen.BoxTitle):
