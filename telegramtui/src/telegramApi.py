@@ -1,7 +1,7 @@
+import socks, os
 from telethon import TelegramClient, events
-import socks
-import configparser
 from datetime import timedelta
+from telegramtui.src.config import get_config
 
 
 class TelegramApi:
@@ -15,8 +15,7 @@ class TelegramApi:
     need_update_read_messages = 0
 
     def __init__(self):
-        config = configparser.ConfigParser()
-        config.read('config.ini')
+        config = get_config()
         api_id = config.get('telegram_api', 'api_id')
         api_hash = config.get('telegram_api', 'api_hash')
         workers = config.get('telegram_api', 'workers')
@@ -40,6 +39,8 @@ class TelegramApi:
         proxy_password = config.get('proxy', 'password')
 
         proxy = (proxy_type, proxy_addr, proxy_port, False, proxy_username, proxy_password)
+
+        session_name = os.path.expanduser("~") + '/.config/telegramtui/' + session_name
 
         # create connection
         self.client = TelegramClient(session_name, api_id, api_hash, update_workers=int(workers),
@@ -117,10 +118,10 @@ class TelegramApi:
         if self.messages[user_id] is None:
             self.get_messages(user_id)
             new_message = self.client.get_messages(self.dialogs[user_id].entity,
-                                                          min_id=self.messages[user_id][0].id - 1)
+                                                   min_id=self.messages[user_id][0].id - 1)
         else:
             new_message = self.client.get_messages(self.dialogs[user_id].entity,
-                                                          min_id=self.messages[user_id][0].id)
+                                                   min_id=self.messages[user_id][0].id)
 
         for j in range(len(new_message) - 1, -1, -1):
             self.messages[user_id].insert(0, new_message[j])

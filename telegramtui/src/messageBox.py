@@ -1,5 +1,5 @@
-from src import npyscreen
-from src.telegramApi import client
+from telegramtui.src import npyscreen
+from telegramtui.src.telegramApi import client
 import textwrap
 from PIL import Image
 import os.path

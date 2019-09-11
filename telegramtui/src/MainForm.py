@@ -1,12 +1,12 @@
 import curses
-import configparser
 from datetime import timedelta
-from src.telegramApi import client
-from src import npyscreen
-from src import chatBox
-from src import messageBox
-from src import inputBox
-from src import functionalBox
+from telegramtui.src.telegramApi import client
+from telegramtui.src import npyscreen
+from telegramtui.src import chatBox
+from telegramtui.src import messageBox
+from telegramtui.src import inputBox
+from telegramtui.src import functionalBox
+from telegramtui.src.config import get_config
 
 
 class MainForm(npyscreen.FormBaseNew):
@@ -18,10 +18,7 @@ class MainForm(npyscreen.FormBaseNew):
         self.add_event_hander("event_messagebox_change_cursor", self.event_messagebox_change_cursor)
         self.add_event_hander("event_update_main_form", self.event_update_main_form)
 
-        # import config settings
-        config = configparser.ConfigParser()
-        config.read('config.ini')
-
+        config = get_config()
         self.emoji = True if config.get('other', 'emoji') == "True" else False
         self.aalib = True if config.get('other', 'aalib') == "True" else False
         self.timezone = int(config.get('other', 'timezone'))

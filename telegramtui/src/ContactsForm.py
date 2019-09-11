@@ -1,4 +1,4 @@
-from src import npyscreen
+from telegramtui.src import npyscreen
 
 
 class ContactsForm(npyscreen.FormBaseNew):
