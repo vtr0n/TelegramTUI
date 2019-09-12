@@ -10,6 +10,7 @@ pillow = "*"
 telethon = "==0.19.1.6"
 pysocks = "*"
 python-aalib = "*"
+windows-curses = {version=">=2.0", sys_platform="=='win32'"}
 
 [requires]
 python_version = "3.7"

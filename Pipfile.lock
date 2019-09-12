@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a56e9ed825cfe685ef0a68717262b01f603486f0154b36f9a521f95ec5df88a5"
+            "sha256": "b3fff2c21ecaacce4eba4133b5af696e9f8711b4a984c745f87518f42537885f"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -91,6 +91,23 @@
             ],
             "index": "pypi",
             "version": "==0.19.1.6"
+        },
+        "windows-curses": {
+            "hashes": [
+                "sha256:06b60893a6a608aa4dafe3d5b1bcfb5fdc9760a3cda1d3011fbf0b5fa2d5f433",
+                "sha256:153339b5a842f4ce5479ed70f69e50d42e7b8a5c3926d9625de24fe2fbcf446a",
+                "sha256:189fd16872a08fcda6d61a9744ba1dfa44c8e8df96029917356a9158f496db7d",
+                "sha256:469fd775defec495991bb0a284bde909ce2f64e9ce8276facc0fa5ab9d1c9227",
+                "sha256:64da65ab6f7862692f6e7ecd81d899a6c2cbd54160a879b2a13135e3f1883e2b",
+                "sha256:8cf06b42e68d681f4c688ff26ac301650f312ab3eeee3228c10fe6fcd34b84c4",
+                "sha256:ca6c87e362fd0c3be6f29ff8683d1cb02b421941a24e1b64234f6aff4d8c77bc",
+                "sha256:d672564aeb751001a9834a3943318384279018ae3fea37f130277c9ad0ea932f",
+                "sha256:f86ab6bc72e0e4fbff83b55c7bf524616c63dc097aa470db811d6b7f36135772",
+                "sha256:fd486778f6497d30056ffc31ecc8fda99ebe1880e0f8cee2dc46c43c631e99b1"
+            ],
+            "index": "pypi",
+            "markers": "sys_platform == 'win32'",
+            "version": "==2.0"
         }
     },
     "develop": {}

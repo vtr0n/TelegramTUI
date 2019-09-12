@@ -1,12 +1,10 @@
+import textwrap
+import os.path
 from telegramtui.src import npyscreen
 from telegramtui.src.telegramApi import client
-import textwrap
+from telegramtui.src import aalib
 from PIL import Image
-import os.path
-import platform
 
-if platform.system() not in ('Darwin', 'Windows'):
-    import aalib
 
 class MessageBox(npyscreen.BoxTitle):
 
@@ -86,7 +84,7 @@ class MessageBox(npyscreen.BoxTitle):
             if dialog_type == 1 or dialog_type == 2:
                 user_name = users[messages[i].sender.id].name
                 user_name = user_name if prepare_forward_message is False else prepare_forward_message
-                if(len(user_name)!=0):
+                if (len(user_name) != 0):
                     user_name = textwrap.wrap(user_name, self.width // 5)[0]
                 else:
                     user_name = "Deleted Account"
@@ -201,7 +199,8 @@ class MessageBox(npyscreen.BoxTitle):
                 else:
                     user_name = "Fwd Unknown"
 
-                user_name = "Fwd " + fwd_from.channel.title if hasattr(message, 'fwd_from.channel.title') else "Fwd Unknown"
+                user_name = "Fwd " + fwd_from.channel.title if hasattr(message,
+                                                                       'fwd_from.channel.title') else "Fwd Unknown"
 
         return user_name
 

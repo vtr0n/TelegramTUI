@@ -37,7 +37,7 @@ def _create_default_config(configparser, filename):
     configparser.set('telegram_api', 'session_name', 'user')
 
     configparser.add_section('app')
-    configparser.set('app', 'name', 'TelegramTUI v0.1.0')
+    configparser.set('app', 'name', 'TelegramTUI v0.1.1')
     configparser.set('app', 'message_dialog_len', '50')
 
     configparser.add_section('proxy')
