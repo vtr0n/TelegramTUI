@@ -5,7 +5,7 @@ from PIL import Image
 import os.path
 import platform
 
-if platform.system() != 'Darwin':
+if platform.system() not in ('Darwin', 'Windows'):
     import aalib
 
 class MessageBox(npyscreen.BoxTitle):
