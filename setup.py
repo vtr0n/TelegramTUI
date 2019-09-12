@@ -32,7 +32,8 @@ setuptools.setup(
         "PySocks==1.7.0",
         "python-aalib==0.3.2",
         "rsa==4.0",
-        "Telethon==0.19.1.6"
+        "Telethon==0.19.1.6",
+        "windows-curses>=2.0;platform_system=='Windows'"
     ],
     entry_points={
         'console_scripts': [
