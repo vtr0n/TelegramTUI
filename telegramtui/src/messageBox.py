@@ -4,6 +4,7 @@ from telegramtui.src import npyscreen
 from telegramtui.src.telegramApi import client
 from telegramtui.src import aalib
 from PIL import Image
+import random
 
 
 class MessageBox(npyscreen.BoxTitle):
@@ -14,6 +15,16 @@ class MessageBox(npyscreen.BoxTitle):
         self.aalib = kwargs['aalib'] if 'aalib' in kwargs else False
 
         self.buff_messages = len(client.dialogs) * [None]
+        self.COLORS = [
+        'NO_EDIT'     ,
+        'STANDOUT'    ,
+        'LABEL'       ,
+        'LABELBOLD'   ,
+        'CONTROL'     ,
+        'SAFE'        ,
+        'WARNING'     ,
+        'DANGER'
+        ]
 
     def when_value_edited(self):
         if self.value is not None:
@@ -146,6 +157,9 @@ class MessageBox(npyscreen.BoxTitle):
                 client.dialogs[current_user].first_name
             users[client.dialogs[current_user].dialog.peer.user_id] = user_info(
                 self.parent.theme_manager.findPair(self, 'WARNING'), name)
+            if name == 'Ninje Ac':
+                users[client.dialogs[current_user].dialog.peer.user_id] = user_info(
+                    self.parent.theme_manager.findPair(self, 'STANDOUT'), name)
 
             # set me
             name = client.me.first_name if hasattr(client.me, 'first_name') else client.me.last_name
@@ -166,8 +180,9 @@ class MessageBox(npyscreen.BoxTitle):
                 elif hasattr(messages[i].sender, 'last_name') and messages[i].sender.last_name is not None:
                     username = messages[i].sender.last_name
 
+                if messages[i].sender.id not in users:
                 users[messages[i].sender.id] = user_info(
-                    self.parent.theme_manager.findPair(self, 'WARNING'), username)
+                        self.parent.theme_manager.findPair(self, random.choice(self.COLORS)), username)
 
                 max_name_len = max(max_name_len, len(username))
 
