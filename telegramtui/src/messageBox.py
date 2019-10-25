@@ -2,7 +2,7 @@ import textwrap
 import os.path
 from telegramtui.src import npyscreen
 from telegramtui.src.telegramApi import client
-from telegramtui.src import aalib
+import aalib
 from PIL import Image
 import random
 
