@@ -80,8 +80,8 @@ class DateCombo(textbox.Textfield, monthbox.DateEntryBase):
                       curses.ascii.CR:  self.h_change_value,
                       curses.ascii.NL:  self.h_change_value,
                       ord('x'):         self.h_change_value,
-                      ord('j'): self.h_exit_down,
-                      ord('k'): self.h_exit_up,
+                      ord('k'): self.h_exit_down,
+                      ord('l'): self.h_exit_up,
                       })
     
 class TitleDateCombo(titlefield.TitleText):

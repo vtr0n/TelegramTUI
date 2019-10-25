@@ -435,10 +435,10 @@ object to be passed to the contained widget."""
         super(MultiLine, self).set_up_handlers()
         self.handlers.update({
             curses.KEY_UP: self.h_cursor_line_up,
-            ord('k'): self.h_cursor_line_up,
+            ord('l'): self.h_cursor_line_up,
             curses.KEY_LEFT: self.h_cursor_line_up,
             curses.KEY_DOWN: self.h_cursor_line_down,
-            ord('j'): self.h_cursor_line_down,
+            ord('k'): self.h_cursor_line_down,
             curses.KEY_RIGHT: self.h_cursor_line_down,
             curses.KEY_NPAGE: self.h_cursor_page_down,
             curses.KEY_PPAGE: self.h_cursor_page_up,
@@ -457,7 +457,7 @@ object to be passed to the contained widget."""
 
         if self.allow_filtering:
             self.handlers.update({
-                ord('l'): self.h_set_filter,
+                ord('/'): self.h_set_filter,
                 ord('L'): self.h_clear_filter,
                 ord('n'): self.move_next_filtered,
                 ord('N'): self.move_previous_filtered,
