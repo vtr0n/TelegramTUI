@@ -91,6 +91,10 @@ class MessageBox(npyscreen.BoxTitle):
             # get name if message is forwarding
             prepare_forward_message = self.prepare_forward_messages(messages[i])
 
+            media = messages[i].media if hasattr(messages[i], 'media') else None
+            mess = messages[i].message if hasattr(messages[i], 'message') \
+                                          and isinstance(messages[i].message, str) else None
+
             # if chat or interlocutor
             if dialog_type == 1 or dialog_type == 2:
                 user_name = users[messages[i].sender.id].name
@@ -101,7 +105,7 @@ class MessageBox(npyscreen.BoxTitle):
                     user_name = "Deleted Account"
                 offset = " " * (max_name_len - (len(user_name)))
                 name = read + user_name + ":" + offset
-                color = (len(read) + len(user_name)) * [users[messages[i].sender.id].color]
+                color = (len(read) + len(name) + (len(mess) if type(mess) is str else 0)) * [users[messages[i].sender.id].color]
 
             # if channel
             elif dialog_type == 3:
@@ -116,9 +120,6 @@ class MessageBox(npyscreen.BoxTitle):
                 name = ""
                 color = [0]
 
-            media = messages[i].media if hasattr(messages[i], 'media') else None
-            mess = messages[i].message if hasattr(messages[i], 'message') \
-                                          and isinstance(messages[i].message, str) else None
 
             image_name = ""
             if self.aalib and media is not None and hasattr(media, 'photo'):
