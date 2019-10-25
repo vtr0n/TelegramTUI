@@ -5,6 +5,7 @@ from telegramtui.src.telegramApi import client
 import aalib
 from PIL import Image
 import random
+import datetime
 
 
 class MessageBox(npyscreen.BoxTitle):
@@ -39,9 +40,16 @@ class MessageBox(npyscreen.BoxTitle):
 
         color_data = []
         data = []
+        last_day = datetime.date(1970, 1, 1)
         for i in range(len(messages) - 1, -1, -1):
             # replace empty char
+            cur_msg = messages[i]
             messages[i].message = messages[i].message.replace(chr(8203), '')
+            cur_day = cur_msg.date.date()
+            if cur_day > last_day:
+                last_day = cur_day
+                data.append(str(last_day))
+                color_data.append(len(str(last_day))*[0]) # white color
 
             data.append(messages[i].name + " " + messages[i].message)
             color_data.append(messages[i].color)
@@ -182,7 +190,7 @@ class MessageBox(npyscreen.BoxTitle):
                     username = messages[i].sender.last_name
 
                 if messages[i].sender.id not in users:
-                users[messages[i].sender.id] = user_info(
+                    users[messages[i].sender.id] = user_info(
                         self.parent.theme_manager.findPair(self, random.choice(self.COLORS)), username)
 
                 max_name_len = max(max_name_len, len(username))
