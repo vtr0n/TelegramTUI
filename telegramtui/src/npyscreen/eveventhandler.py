@@ -45,7 +45,7 @@ class EventHandler(object):
             for handler in self.event_handlers[event.name]:
                 try:
                     handler(event)
-                except weakref.ReferenceError:
+                except ReferenceError:
                     remove_list.append(handler)
             for dead_handler in remove_list:
                 self.event_handlers[event.name].remove(handler)
