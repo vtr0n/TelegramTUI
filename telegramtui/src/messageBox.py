@@ -17,7 +17,6 @@ class MessageBox(npyscreen.BoxTitle):
 
         self.buff_messages = len(client.dialogs) * [None]
         self.COLORS = [
-        'NO_EDIT'     ,
         'STANDOUT'    ,
         'LABEL'       ,
         'LABELBOLD'   ,
@@ -191,7 +190,7 @@ class MessageBox(npyscreen.BoxTitle):
 
                 if messages[i].sender.id not in users:
                     users[messages[i].sender.id] = user_info(
-                        self.parent.theme_manager.findPair(self, random.choice(self.COLORS)), username)
+                        self.parent.theme_manager.findPair(self, self.COLORS[i%len(self.COLORS)]), username)
 
                 max_name_len = max(max_name_len, len(username))
 
