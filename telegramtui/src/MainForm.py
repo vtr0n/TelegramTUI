@@ -6,6 +6,7 @@ from telegramtui.src import chatBox
 from telegramtui.src import messageBox
 from telegramtui.src import inputBox
 from telegramtui.src import functionalBox
+from telegramtui.src.aalib import is_aalib_support
 from telegramtui.src.config import get_config
 
 
@@ -20,7 +21,8 @@ class MainForm(npyscreen.FormBaseNew):
 
         config = get_config()
         self.emoji = True if config.get('other', 'emoji') == "True" else False
-        self.aalib = True if config.get('other', 'aalib') == "True" else False
+        config_aalib = True if config.get('other', 'aalib') == "True" else False
+        self.aalib = True if is_aalib_support() and config_aalib else False
         self.timezone = int(config.get('other', 'timezone'))
         self.app_name = config.get('app', 'name')
 

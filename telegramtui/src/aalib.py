@@ -1,4 +1,10 @@
 import platform
 
-if platform.system() not in ('Darwin', 'Windows'):
-    import aalib
+def is_aalib_support():
+    """
+    Currently aalib working only on Linux
+    :return:
+    """
+    if platform.system() in ('Linux'):
+        return True
+    return False
