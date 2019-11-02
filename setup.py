@@ -25,7 +25,7 @@ setuptools.setup(
     ],
     python_requires='>=3.4',
     install_requires=[
-        "Pillow==6.1.0",
+        "Pillow==6.2.0",
         "pyaes==1.6.1",
         "pyasn1==0.4.7",
         "PySocks==1.7.0",
