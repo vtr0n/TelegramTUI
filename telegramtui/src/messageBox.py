@@ -2,8 +2,9 @@ import textwrap
 import os.path
 from telegramtui.src import npyscreen
 from telegramtui.src.telegramApi import client
-from telegramtui.src import aalib
+import aalib
 from PIL import Image
+import datetime
 
 
 class MessageBox(npyscreen.BoxTitle):
@@ -14,6 +15,15 @@ class MessageBox(npyscreen.BoxTitle):
         self.aalib = kwargs['aalib'] if 'aalib' in kwargs else False
 
         self.buff_messages = len(client.dialogs) * [None]
+        self.COLORS = [
+        'STANDOUT'    ,
+        'LABEL'       ,
+        'LABELBOLD'   ,
+        'CONTROL'     ,
+        'SAFE'        ,
+        'WARNING'     ,
+        'DANGER'
+        ]
 
     def when_value_edited(self):
         if self.value is not None:
@@ -24,13 +34,32 @@ class MessageBox(npyscreen.BoxTitle):
         self.parent.parentApp.queue_event(npyscreen.Event("event_messagebox_change_cursor"))
 
     def update_messages(self, current_user):
+        self.msg_indexs = []
         messages = self.get_messages_info(current_user)
 
         color_data = []
         data = []
+        last_date = datetime.datetime(1970, 1, 1)
         for i in range(len(messages) - 1, -1, -1):
+            self.msg_indexs.append(i)
             # replace empty char
+            cur_msg = messages[i]
             messages[i].message = messages[i].message.replace(chr(8203), '')
+            cur_date = cur_msg.date
+            if cur_date.date() > last_date.date():
+                last_date = cur_date
+                self.add_datemark(data, color_data, cur_date)
+            else:
+                time_delta = cur_date - last_date
+                #  delta_hours = int(time_delta.seconds / 3600)
+                #  if bool(delta_hours):
+                    #  bar = '| ' * delta_hours
+                    #  data.append(bar)
+                    #  color_data.append(len(bar)*[0]) # white color
+                if time_delta>datetime.timedelta(0, 1800, 0):
+                    self.add_datemark(data, color_data, cur_date, False)
+
+            last_date = cur_msg.date
 
             data.append(messages[i].name + " " + messages[i].message)
             color_data.append(messages[i].color)
@@ -39,17 +68,32 @@ class MessageBox(npyscreen.BoxTitle):
 
         self.values = data
 
-        if len(messages) > self.height - 3:
-            self.entry_widget.start_display_at = len(messages) - self.height + 3
+        if len(data) > self.height - 3:
+            self.entry_widget.start_display_at = len(data) - self.height + 3
         else:
             self.entry_widget.start_display_at = 0
 
-        self.entry_widget.cursor_line = len(messages)
+        self.entry_widget.cursor_line = len(data)
 
         self.name = client.dialogs[current_user].name
         self.footer = client.online[current_user]
 
         self.display()
+
+    def add_datemark(self, out, color_out, date, full=True):
+        if full:
+            today = datetime.date.today()
+            dd = (today - date.date()).days
+            if dd < 2:
+                mark=['Today ','Yesterday '][dd]+str(date.strftime('%I:%M:%S'))
+            else:
+                mark=str(date)
+        else:
+            mark = 11*' '+str(date.time())
+
+        self.msg_indexs.append(-1)
+        out.append(mark)
+        color_out.append(len(mark)*[0]) # white color
 
     def get_messages_info(self, current_user):
         messages = client.get_messages(current_user)
@@ -80,6 +124,10 @@ class MessageBox(npyscreen.BoxTitle):
             # get name if message is forwarding
             prepare_forward_message = self.prepare_forward_messages(messages[i])
 
+            media = messages[i].media if hasattr(messages[i], 'media') else None
+            mess = messages[i].message if hasattr(messages[i], 'message') \
+                                          and isinstance(messages[i].message, str) else None
+
             # if chat or interlocutor
             if dialog_type == 1 or dialog_type == 2:
                 user_name = users[messages[i].sender.id].name
@@ -90,7 +138,7 @@ class MessageBox(npyscreen.BoxTitle):
                     user_name = "Deleted Account"
                 offset = " " * (max_name_len - (len(user_name)))
                 name = read + user_name + ":" + offset
-                color = (len(read) + len(user_name)) * [users[messages[i].sender.id].color]
+                color = (len(read) + len(name) + (len(mess) if type(mess) is str else 0)) * [users[messages[i].sender.id].color]
 
             # if channel
             elif dialog_type == 3:
@@ -105,9 +153,6 @@ class MessageBox(npyscreen.BoxTitle):
                 name = ""
                 color = [0]
 
-            media = messages[i].media if hasattr(messages[i], 'media') else None
-            mess = messages[i].message if hasattr(messages[i], 'message') \
-                                          and isinstance(messages[i].message, str) else None
 
             image_name = ""
             if self.aalib and media is not None and hasattr(media, 'photo'):
@@ -146,6 +191,9 @@ class MessageBox(npyscreen.BoxTitle):
                 client.dialogs[current_user].first_name
             users[client.dialogs[current_user].dialog.peer.user_id] = user_info(
                 self.parent.theme_manager.findPair(self, 'WARNING'), name)
+            if name == 'Ninje Ac':
+                users[client.dialogs[current_user].dialog.peer.user_id] = user_info(
+                    self.parent.theme_manager.findPair(self, 'STANDOUT'), name)
 
             # set me
             name = client.me.first_name if hasattr(client.me, 'first_name') else client.me.last_name
@@ -166,8 +214,9 @@ class MessageBox(npyscreen.BoxTitle):
                 elif hasattr(messages[i].sender, 'last_name') and messages[i].sender.last_name is not None:
                     username = messages[i].sender.last_name
 
-                users[messages[i].sender.id] = user_info(
-                    self.parent.theme_manager.findPair(self, 'WARNING'), username)
+                if messages[i].sender.id not in users:
+                    users[messages[i].sender.id] = user_info(
+                        self.parent.theme_manager.findPair(self, self.COLORS[i%len(self.COLORS)]), username)
 
                 max_name_len = max(max_name_len, len(username))
 

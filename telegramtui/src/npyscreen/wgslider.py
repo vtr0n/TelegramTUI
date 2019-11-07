@@ -123,10 +123,10 @@ class Slider(widget.Widget):
                     curses.KEY_RIGHT: self.h_increase,
                     ord('+'): self.h_increase,
                     ord('-'): self.h_decrease,
-                    ord('h'): self.h_decrease,
-                    ord('l'): self.h_increase,
-                    ord('j'): self.h_exit_down,
-                    ord('k'): self.h_exit_up,
+                    ord('j'): self.h_decrease,
+                    ord(';'): self.h_increase,
+                    ord('k'): self.h_exit_down,
+                    ord('l'): self.h_exit_up,
                 })
 
     def h_increase(self, ch):

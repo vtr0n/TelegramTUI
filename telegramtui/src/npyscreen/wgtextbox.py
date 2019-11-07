@@ -493,8 +493,8 @@ class FixedText(TextfieldBase):
         super(FixedText, self).set_up_handlers()
         self.handlers.update({curses.KEY_LEFT:    self.h_cursor_left,
                            curses.KEY_RIGHT:   self.h_cursor_right,
-                           ord('k'):    self.h_exit_up,
-                           ord('j'):    self.h_exit_down,
+                           ord('l'):    self.h_exit_up,
+                           ord('k'):    self.h_exit_down,
                            })
     
     

@@ -15,10 +15,10 @@ class _ToggleControl(Widget):
                 ord('x'):        self.h_toggle,
                 curses.ascii.NL: self.h_select_exit,
                 curses.ascii.CR: self.h_select_exit,
-                ord('j'):        self.h_exit_down,
-                ord('k'):        self.h_exit_up,
-                ord('h'):        self.h_exit_left,
-                ord('l'):        self.h_exit_right,                      
+                ord('k'):        self.h_exit_down,
+                ord('l'):        self.h_exit_up,
+                ord('j'):        self.h_exit_left,
+                ord(';'):        self.h_exit_right,                      
             })
     
     def h_toggle(self, ch):
