@@ -31,7 +31,8 @@ class MessageInfoForm(npyscreen.ActionForm):
     def update(self):
         current_user = self.parentApp.MainForm.chatBoxObj.value
         current_user_name = client.dialogs[current_user].name
-        current_message = self.parentApp.MainForm.messageBoxObj.value
+        val = self.parentApp.MainForm.messageBoxObj.value
+        current_message = self.parentApp.MainForm.messageBoxObj.msg_indexs[-val-1]
         messages = self.parentApp.MainForm.messageBoxObj.get_messages_info(current_user)
         current_id = messages[-current_message - 1].id
 

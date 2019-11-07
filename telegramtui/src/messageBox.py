@@ -4,7 +4,6 @@ from telegramtui.src import npyscreen
 from telegramtui.src.telegramApi import client
 import aalib
 from PIL import Image
-import random
 import datetime
 
 
@@ -35,20 +34,32 @@ class MessageBox(npyscreen.BoxTitle):
         self.parent.parentApp.queue_event(npyscreen.Event("event_messagebox_change_cursor"))
 
     def update_messages(self, current_user):
+        self.msg_indexs = []
         messages = self.get_messages_info(current_user)
 
         color_data = []
         data = []
-        last_day = datetime.date(1970, 1, 1)
+        last_date = datetime.datetime(1970, 1, 1)
         for i in range(len(messages) - 1, -1, -1):
+            self.msg_indexs.append(i)
             # replace empty char
             cur_msg = messages[i]
             messages[i].message = messages[i].message.replace(chr(8203), '')
-            cur_day = cur_msg.date.date()
-            if cur_day > last_day:
-                last_day = cur_day
-                data.append(str(last_day))
-                color_data.append(len(str(last_day))*[0]) # white color
+            cur_date = cur_msg.date
+            if cur_date.date() > last_date.date():
+                last_date = cur_date
+                self.add_datemark(data, color_data, cur_date)
+            else:
+                time_delta = cur_date - last_date
+                #  delta_hours = int(time_delta.seconds / 3600)
+                #  if bool(delta_hours):
+                    #  bar = '| ' * delta_hours
+                    #  data.append(bar)
+                    #  color_data.append(len(bar)*[0]) # white color
+                if time_delta>datetime.timedelta(0, 1800, 0):
+                    self.add_datemark(data, color_data, cur_date, False)
+
+            last_date = cur_msg.date
 
             data.append(messages[i].name + " " + messages[i].message)
             color_data.append(messages[i].color)
@@ -57,17 +68,32 @@ class MessageBox(npyscreen.BoxTitle):
 
         self.values = data
 
-        if len(messages) > self.height - 3:
-            self.entry_widget.start_display_at = len(messages) - self.height + 3
+        if len(data) > self.height - 3:
+            self.entry_widget.start_display_at = len(data) - self.height + 3
         else:
             self.entry_widget.start_display_at = 0
 
-        self.entry_widget.cursor_line = len(messages)
+        self.entry_widget.cursor_line = len(data)
 
         self.name = client.dialogs[current_user].name
         self.footer = client.online[current_user]
 
         self.display()
+
+    def add_datemark(self, out, color_out, date, full=True):
+        if full:
+            today = datetime.date.today()
+            dd = (today - date.date()).days
+            if dd < 2:
+                mark=['Today ','Yesterday '][dd]+str(date.strftime('%I:%M:%S'))
+            else:
+                mark=str(date)
+        else:
+            mark = 11*' '+str(date.time())
+
+        self.msg_indexs.append(-1)
+        out.append(mark)
+        color_out.append(len(mark)*[0]) # white color
 
     def get_messages_info(self, current_user):
         messages = client.get_messages(current_user)
