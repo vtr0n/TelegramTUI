@@ -2,7 +2,6 @@ import textwrap
 import os.path
 from telegramtui.src import npyscreen
 from telegramtui.src.telegramApi import client
-from telegramtui.src import aalib
 from PIL import Image
 
 
@@ -258,6 +257,7 @@ class MessageBox(npyscreen.BoxTitle):
     def prepare_media(self, out, media, name, image_name, read, mess_id, color, date):
         if media is not None:
             if hasattr(media, 'photo') and self.aalib:
+                import aalib
                 try:
                     if not os.path.isfile(os.getcwd() + "/downloads/" + str(media.photo.id) + ".jpg"):
                         # download picture
