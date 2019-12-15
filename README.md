@@ -12,7 +12,7 @@ Telegram client on your console
 ```pip install telegramtui```
 
 ### Proxy
-You can set proxy in config.ini
+You can set proxy in ```~/.config/telegramtui/telegramtui.ini```
 
 ### Controls
 * Navigation: `Tab`, `Shift+Tab`, `Mouse`
