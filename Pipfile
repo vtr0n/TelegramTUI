@@ -6,11 +6,11 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-pillow = "*"
+pillow = "==6.2.1"
 telethon = "==0.19.1.6"
-pysocks = "*"
+pysocks = "==1.7.1"
 python-aalib = "*"
-windows-curses = {version=">=2.0", sys_platform="=='win32'"}
+windows-curses = {version = ">=2.0",sys_platform = "=='win32'"}
 
 [requires]
 python_version = "3.7"
