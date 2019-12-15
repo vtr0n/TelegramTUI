@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="telegramtui",
-    version="0.1.1",
+    version="0.1.2",
     author="Valery Krasnoselsky",
     author_email="valery.krasnoselsky@gmail.com",
     description="Telegram client on your console",
