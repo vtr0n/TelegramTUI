@@ -136,25 +136,26 @@ class MessageBox(npyscreen.BoxTitle):
 
         users = {}
         max_name_len = 0
+        dialog = client.dialogs[current_user]
 
         # 1 - dialog with user
-        if hasattr(client.dialogs[current_user].dialog.peer, 'user_id'):
+        if dialog.is_user:
             dialog_type = 1
             # set interlocutor
-            name = client.dialogs[current_user].name if hasattr(client.dialogs[current_user], 'name') else \
-                client.dialogs[current_user].first_name
-            users[client.dialogs[current_user].dialog.peer.user_id] = user_info(
+            name = dialog.name if hasattr(dialog, 'name') else \
+                dialog.first_name
+            users[dialog.dialog.peer.user_id] = user_info(
                 self.parent.theme_manager.findPair(self, 'WARNING'), name)
 
             # set me
             name = client.me.first_name if hasattr(client.me, 'first_name') else client.me.last_name
             users[client.me.id] = user_info(self.parent.theme_manager.findPair(self, 'NO_EDIT'), name)
 
-            max_name_len = max(len(users[client.dialogs[current_user].dialog.peer.user_id].name),
+            max_name_len = max(len(users[dialog.dialog.peer.user_id].name),
                                len(users[client.me.id].name))
 
         # 2 - chat group
-        elif hasattr(client.dialogs[current_user].dialog.peer, 'chat_id'):
+        elif dialog.is_group:
             dialog_type = 2
             for i in range(len(messages)):
                 username = ""
@@ -175,7 +176,7 @@ class MessageBox(npyscreen.BoxTitle):
             users[client.me.id] = user_info(self.parent.theme_manager.findPair(self, 'NO_EDIT'), name)
 
         # 3 - channel
-        elif hasattr(client.dialogs[current_user].dialog.peer, 'channel_id'):
+        elif dialog.is_channel and not dialog.is_group:
             dialog_type = 3
 
         # -1 not define

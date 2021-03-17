@@ -23,19 +23,20 @@ class ChatBox(npyscreen.BoxTitle):
         data = []
         for i in range(len(client.dialogs)):
             special = ""
+            dialog = client.dialogs[i]
             if self.emoji:
-                if hasattr(client.dialogs[i].dialog.peer, 'user_id'):
-                    special = "👤 " if not client.dialogs[i].entity.bot else "🤖 "
-                elif hasattr(client.dialogs[i].dialog.peer, 'channel_id'):
+                if dialog.is_user:
+                    special = "👤 " if not dialog.entity.bot else "🤖 "
+                elif dialog.is_channel and not dialog.is_group:
                     special = "📢 "
-                elif hasattr(client.dialogs[i].dialog.peer, 'chat_id'):
+                elif dialog.is_group:
                     special = "👥 "
             else:
-                if hasattr(client.dialogs[i].dialog.peer, 'user_id'):
-                    special = "* " if not client.dialogs[i].entity.bot else "@ "
-                elif hasattr(client.dialogs[i].dialog.peer, 'channel_id'):
+                if dialog.is_user:
+                    special = "* " if not dialog.entity.bot else "@ "
+                elif dialog.is_channel and not dialog.is_group:
                     special = "# "
-                elif hasattr(client.dialogs[i].dialog.peer, 'chat_id'):
+                elif dialog.is_group:
                     special = "$ "
 
             timestamp = int(time.time())
