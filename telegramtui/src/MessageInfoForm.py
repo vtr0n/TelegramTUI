@@ -6,6 +6,57 @@ from datetime import timedelta
 from telegramtui.src.config import get_config
 
 
+def generate_user_name(user):
+    "$firstname $lastname (@$username) (id $id)"
+    out = str(user.first_name)
+    if user.last_name:
+        out += " {}".format(user.last_name)
+    if user.username:
+        out += " (@{})".format(user.username)
+    out += " (id {})".format(user.id)
+    return out
+
+
+def generate_chat_name(user):
+    "$title (@$username) (id $id)"
+    out = "{}".format(user.title)
+    if hasattr(user, "username") and user.username:
+        out += " (@{})".format(user.username)
+    out += " (id {})".format(user.id)
+    return out
+
+
+def _generate_sender(message_info):
+    # Sender is missing in channels
+    # channel + group is supergroup
+    if message_info.is_channel and not message_info.is_group:
+        if message_info.post_author is not None:
+            return message_info.post_author
+        return "None"
+    return generate_user_name(message_info.sender)
+
+
+def _generate_chat(message_info):
+    # Chat object is a user in private chats
+    if message_info.is_private:
+        return generate_user_name(message_info.chat)
+    return generate_chat_name(message_info.chat)
+
+
+def _generate_chat_type(message_info):
+    # channel + group is supergroup
+    if message_info.is_channel:
+        if message_info.is_group:
+            return "Super Group"
+        return "Channel"
+    if message_info.is_private:
+        if message_info.sender.bot:
+            return "Private Chat (Bot)"
+        return "Private Chat"
+    if message_info.is_group:
+        return "Group Chat"
+
+
 class MessageInfoForm(npyscreen.ActionForm):
 
     def create(self):
@@ -24,6 +75,8 @@ class MessageInfoForm(npyscreen.ActionForm):
         self.mess_id = self.add(npyscreen.TitleText, name="Message id:", editable=False)
         self.date = self.add(npyscreen.TitleText, name="Date:      ", editable=False)
         self.sender = self.add(npyscreen.TitleText, name="Sender:    ", editable=False)
+        self.chat = self.add(npyscreen.TitleText, name="Chat:    ", editable=False)
+        self.chat_type = self.add(npyscreen.TitleText, name="Chat Type:", editable=False)
         self.forward = self.add(npyscreen.TitleText, name="Fwd from:  ", editable=False)
         self.attachment = self.add(npyscreen.TitleText, name="Attachment:", editable=False)
         self.text = self.add(npyscreen.TitleMultiLine, name="Text:      ", max_height=5, scroll_exit=True)
@@ -37,8 +90,9 @@ class MessageInfoForm(npyscreen.ActionForm):
 
         message_info = client.get_message_by_id(current_user, current_id)
         prepared_text = self.prepare_message(message_info.message)
-
-        self.sender.value = current_user_name + " (id " + str(client.dialogs[current_user].entity.id) + ")"
+        self.sender.value = _generate_sender(message_info)
+        self.chat.value = _generate_chat(message_info)
+        self.chat_type.value = _generate_chat_type(message_info)
         self.mess_id.value = current_id
         self.date.value = str(messages[-current_message - 1].date + (timedelta(self.timezone) // 24))
         self.attachment.value = self.prepare_media(message_info)
