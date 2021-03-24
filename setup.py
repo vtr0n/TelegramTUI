@@ -30,7 +30,7 @@ setuptools.setup(
         "pyasn1==0.4.7",
         "PySocks==1.7.1",
         "python-aalib==0.3.2",
-        "rsa==4.0",
+        "rsa==4.1",
         "Telethon==0.19.1.6",
         "windows-curses>=2.0;platform_system=='Windows'"
     ],
