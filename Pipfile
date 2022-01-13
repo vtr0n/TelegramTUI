@@ -6,7 +6,7 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-pillow = "==6.2.1"
+pillow = "==9.0.0"
 telethon = "==0.19.1.6"
 pysocks = "==1.7.1"
 python-aalib = "*"
